@@ -46,21 +46,16 @@ mysql_query($query);
 echo "
 <div style='position:absolute;left:100px;top:200px;width:60%'>";
 $count=0;
-function recurse_child($child,$count)
+function recurse_child($parent,$count)
 {
 $count++;
-$query="select * from `content_s1` where id=$child ";
+$query="select * from `content_s1` where parent=$parent ";
 $result=mysql_query($query);
-$r=mysql_fetch_assoc($result);
-$children=explode("," ,$r["children"]);
 
-echo "<div id='".$child."' style='background:rgba(20,100,100,0.1);'><div style='float:right'><button >edit</button><button>delete</button><button class='add'>add</button></div><h1>".$r["heading"]."</h2><div>".$r["content"]."</div>";
-foreach($children as $child1)
-{
-if(is_numeric($child1))
-recurse_child($child1,$count);
-else 
-break;
+while($r=mysql_fetch_assoc($result)){
+echo "<div id='".$parent."' style='background:rgba(20,100,100,0.1);'><div style='float:right'><button >edit</button><button>delete</button><button class='add'>add</button></div><h1>".$r["heading"]."</h2><div>".$r["content"]."</div>";
+recurse_child($r["id"],$count);
+
 }
 echo "</div>";
 }

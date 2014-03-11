@@ -10,34 +10,14 @@ mysql_select_db($database,$con);
 
 
 
-if(isset($_POST["submit"]))
-{
-$query="INSERT INTO  `profile`.`content_s1` (
-`id` ,
-`heading` ,
-`content`,
-`order`,
-`visibility`,
-`children`,
-`parent`
-)
-VALUES (
-NULL ,  '".$_POST['sub_head']."',  '".$_POST['content']."' ,'1','1','','".$_POST['hold_id']."'
-);";
+if(isset($_POST["submit"])){
 
-mysql_query($query);
 
-$query="SELECT `children` from `content_s1` where `id`='".$_POST['hold_id']."'";
-$fetch=mysql_fetch_assoc(mysql_query($query));
-if($fetch["children"]=='')
-$fetch["children"]=$set;
-else
-$fetch["children"]=$fetch["children"].",".$set;
 
-$query="UPDATE `content_s1` SET `children`='".$fetch['children']."', WHERE `id`='".$_POST['hold_id']."'";
-mysql_query($query);
 
-}
+
+
+
 
 
 
@@ -45,10 +25,8 @@ mysql_query($query);
 
 echo "
 <div style='position:absolute;left:100px;top:200px;width:60%'>";
-$count=0;
-function recurse_child($child,$count)
+function recurse_child($child)
 {
-$count++;
 $query="select * from `content_s1` where id=$child ";
 $result=mysql_query($query);
 $r=mysql_fetch_assoc($result);
@@ -58,15 +36,14 @@ echo "<div id='".$child."' style='background:rgba(20,100,100,0.1);'><div style='
 foreach($children as $child1)
 {
 if(is_numeric($child1))
-recurse_child($child1,$count);
+recurse_child($child1);
 else 
 break;
 }
 echo "</div>";
 }
-recurse_child(1,$count);
+recurse_child(1);
 echo "</div>";
-echo $count;
 ?>
 <script src="../mohit.js"></script>
 <script>

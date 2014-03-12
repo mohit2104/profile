@@ -8,7 +8,7 @@ include("config.php");
 $con=mysql_connect($server,$username,$password);
 mysql_select_db($database,$con);
 
-if(isset($_POST["submit1"])){
+if(isset($_POST["delete"])){
 
 function recurse_delete($parent)
 {
@@ -18,7 +18,7 @@ $query="DELETE FROM `content_s1` WHERE id=$parent ";
 mysql_query($query);
 while($r=mysql_fetch_assoc($result)){
 
-recurse_delete($r["id"]);
+recurse_delete($r["id"],$count);
 }
 }
 recurse_delete($_POST["hold_delete_id"]);
@@ -69,7 +69,7 @@ $query="select * from `content_s1` where parent=$parent ";
 $result=mysql_query($query);
 
 while($r=mysql_fetch_assoc($result)){
-echo "<div id='".$r['id']."' style='background:rgba(20,100,100,0.1);'><div style='float:right'><button >edit</button><button class='delete'>delete</button><button class='add'>add</button></div><h1>".$r["heading"]."</h2><div>".$r["content"]."</div>";
+echo "<div id='".$parent."' style='background:rgba(20,100,100,0.1);'><div style='float:right'><button >edit</button><button class='delete'>delete</button><button class='add'>add</button></div><h1>".$r["heading"]."</h2><div>".$r["content"]."</div>";
 recurse_child($r["id"],$count);
 
 }
@@ -83,21 +83,20 @@ echo $count;
 <script>
 $(".add").click(function(){ document.getElementById("hold_id").value=this.parentNode.parentNode.id;document.getElementById("insert").style.display="block";
 });
-$(".delete").click(function(){ if(confirm("do you want to continue")==true){ document.getElementById("hold_delete_id").value=this.parentNode.parentNode.id;document.forms["delete"].submit1.click();
-}
-}); 
+$(".delete").click(function(){ if(confirm("do you want to continue")){ document.getElementById("hold_delete_id")=this.parentNode.parentNode.id; document.forms["delete"].submit.click();}
+});
 </script>
 <!--div  id="insert" style="position:fixed;left:30%;top:30%;height:40%;width:40%;background:white;border:1px solid black;border-radius:5%;display:none">
 <h2>Insert Into</h2>
-<form action="" method="post" >
+<form action="" method="post" name="delete">
 <input type="number" id="hold_id"></input>
 <input type="text" placeholder="sub_head" ></input><br>
 <textarea cols=40 rows=8></textarea>
 </form>
 </div-->
 <div style="display:none">
-<form action='' method='post' name="delete">
+<form action='' method='post'>
 <input type="text" id="hold_delete_id" name="hold_delete_id"></input>
-<input type="submit" name="submit1"></input>
+<input type="submit" name="delete"></input>
 </form>
 </div>
